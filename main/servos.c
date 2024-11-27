@@ -49,7 +49,7 @@ bool init_servos()
     return 1;
 }
 
-void update_canards(canards_t *new_canards)
+void update_canards(const canards_t *new_canards)
 {
     ledc_set_duty(LEDC_SPEED_MODE, 0, angle_to_duty(new_canards->canard_angle1));
     ledc_set_duty(LEDC_SPEED_MODE, 1, angle_to_duty(new_canards->canard_angle2));
