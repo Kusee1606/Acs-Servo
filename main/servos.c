@@ -13,7 +13,7 @@
 #define LEDC_RES 10     // PWM signal resolution
 #define MIN_PULSE 1000  // Pulse width for minimal position in μs
 #define MAX_PULSE 2000  // Pulse width for maximal position in μs
-#define SERVO_RANGE 180 // Movment range for servo in degrees
+#define SERVO_RANGE 180 // Movement range for servo in degrees
 
 #define MIN_ANGLE (-1 * (SERVO_RANGE / 2))
 #define MAX_ANGLE (SERVO_RANGE / 2)
