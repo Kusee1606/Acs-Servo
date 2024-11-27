@@ -9,7 +9,7 @@
 
 void app_main(void)
 {
-    init_servos();
+    if(init_servos()){
     vTaskDelay(pdMS_TO_TICKS(1000));
     canards_t new_canards;
     while (1)
@@ -20,5 +20,6 @@ void app_main(void)
         new_canards = (canards_t){.canard_angle1 = 30, .canard_angle2 = 30, .canard_angle3 = 30, .canard_angle4 = 30};
         update_canards(&new_canards);
         vTaskDelay(pdMS_TO_TICKS(1000));
+    }
     }
 }

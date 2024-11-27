@@ -2,14 +2,14 @@
 #include "driver/ledc.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
+#include "esp_err.h"
 
 #define SERVO_PIN_1 13
 #define SERVO_PIN_2 12
 #define SERVO_PIN_3 14
 #define SERVO_PIN_4 27
 
-// I don't know why, but it won't work with integers 
+// I don't know why, but it won't work with integers
 #define SERVO_CH_1 LEDC_CHANNEL_0
 #define SERVO_CH_2 LEDC_CHANNEL_1
 #define SERVO_CH_3 LEDC_CHANNEL_2
@@ -31,6 +31,8 @@ const uint8_t servo_channels[4] = {SERVO_CH_1, SERVO_CH_2, SERVO_CH_3, SERVO_CH_
 
 bool init_servos()
 {
+    bool error_occurred = false;
+
     ledc_timer_config_t canards_pwm_timer =
         {
             .speed_mode = LEDC_SPEED_MODE,
@@ -38,7 +40,7 @@ bool init_servos()
             .timer_num = LEDC_TIMER_0,
             .freq_hz = LEDC_FREQ,
             .clk_cfg = LEDC_AUTO_CLK};
-    ledc_timer_config(&canards_pwm_timer);
+    error_occurred |= (ESP_ERROR_CHECK_WITHOUT_ABORT(ledc_timer_config(&canards_pwm_timer)) != ESP_OK);
 
     const float start_duty = angle_to_duty(0);
     ledc_channel_config_t ledc_channel[4];
@@ -52,9 +54,9 @@ bool init_servos()
         ledc_channel[i].duty = start_duty;
         ledc_channel[i].hpoint = 0;
 
-        ledc_channel_config(&ledc_channel[i]);
+        error_occurred |= (ESP_ERROR_CHECK_WITHOUT_ABORT(ledc_channel_config(&ledc_channel[i])) != ESP_OK);
     }
-    return 1;
+    return !(error_occurred);
 }
 
 void update_canards(const canards_t *new_canards)
@@ -71,7 +73,10 @@ void update_canards(const canards_t *new_canards)
 
 uint32_t angle_to_duty(float angle)
 {
-
+    if (angle > MAX_ANGLE)
+        angle = MAX_ANGLE;
+    if (angle < MIN_ANGLE)
+        angle = MIN_ANGLE;
     uint32_t duty = (unsigned int)((((((angle - MIN_ANGLE) / SERVO_RANGE) * (MAX_PULSE - MIN_PULSE)) + MIN_PULSE) / LEDC_PERIOD) * (1 << LEDC_RES));
     return duty;
 }
