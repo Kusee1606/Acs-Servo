@@ -21,5 +21,6 @@ void app_main(void)
         update_canards(&new_canards);
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    }
+    } else
+    printf("Err");
 }
