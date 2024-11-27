@@ -8,6 +8,7 @@
 #define SERVO_PIN_3 14
 #define SERVO_PIN_4 27
 
+#define LEDC_SPEED_MODE LEDC_HIGH_SPEED_MODE
 #define LEDC_FREQ 50    // PWM signal frequency in HZ
 #define LEDC_RES 10     // PWM signal resolution
 #define MIN_PULSE 1000  // Pulse width for minimal position in μs
@@ -24,7 +25,7 @@ bool init_servos()
 {
     ledc_timer_config_t canards_pwm_timer =
         {
-            .speed_mode = LEDC_HIGH_SPEED_MODE,
+            .speed_mode = LEDC_SPEED_MODE,
             .duty_resolution = LEDC_RES,
             .timer_num = LEDC_TIMER_0,
             .freq_hz = LEDC_FREQ,
@@ -36,7 +37,7 @@ bool init_servos()
     for (int i = 0; i < 4; i++)
     {
         ledc_channel[i].gpio_num = servo_pins[i];
-        ledc_channel[i].speed_mode = LEDC_HIGH_SPEED_MODE;
+        ledc_channel[i].speed_mode = LEDC_SPEED_MODE;
         ledc_channel[i].channel = i;
         ledc_channel[i].timer_sel = LEDC_TIMER_0;
         ledc_channel[i].intr_type = LEDC_INTR_DISABLE;
@@ -50,14 +51,14 @@ bool init_servos()
 
 void update_canards(canards_t *new_canards)
 {
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, 0, angle_to_duty(new_canards->canard_angle1));
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, 1, angle_to_duty(new_canards->canard_angle2));
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, 2, angle_to_duty(new_canards->canard_angle3));
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, 3, angle_to_duty(new_canards->canard_angle4));
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, 0);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, 1);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, 2);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, 3);
+    ledc_set_duty(LEDC_SPEED_MODE, 0, angle_to_duty(new_canards->canard_angle1));
+    ledc_set_duty(LEDC_SPEED_MODE, 1, angle_to_duty(new_canards->canard_angle2));
+    ledc_set_duty(LEDC_SPEED_MODE, 2, angle_to_duty(new_canards->canard_angle3));
+    ledc_set_duty(LEDC_SPEED_MODE, 3, angle_to_duty(new_canards->canard_angle4));
+    ledc_update_duty(LEDC_SPEED_MODE, 0);
+    ledc_update_duty(LEDC_SPEED_MODE, 1);
+    ledc_update_duty(LEDC_SPEED_MODE, 2);
+    ledc_update_duty(LEDC_SPEED_MODE, 3);
 }
 
 uint32_t angle_to_duty(float angle)
