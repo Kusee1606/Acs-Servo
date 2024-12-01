@@ -53,7 +53,7 @@ bool init_servos()
         ledc_channel[i].intr_type = LEDC_INTR_DISABLE;
         ledc_channel[i].duty = start_duty;
         ledc_channel[i].hpoint = 0;
-
+    
         error_occurred |= (ESP_ERROR_CHECK_WITHOUT_ABORT(ledc_channel_config(&ledc_channel[i])) != ESP_OK);
     }
     return !(error_occurred);
